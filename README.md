@@ -17,7 +17,7 @@ According to [DNS Amplification Attack](https://www.cloudflare.com/learning/ddos
 
 # Experience
 ## Explanation
-In this experience, I firstly develop a toolkit base on **pathon scapy** which send a **UDP/IP** packet carry a **DNS** packet with **DNS Resource Record** packet.
+This package is a standalone toolkit based on **python scapy** which send a **UDP/IP** packet carry a **DNS** packet with **DNS Resource Record** packet. The scapy library is included in the repository to ensure compatibility with virtually any host that can run Python.
 The `destination` is `8.8.8.8`, which is well-known **google DNS server**.
 In the experience phase, the `source address` is local, but can be easily change to `victim address` in attack phase.
 - [ ] DAA.py
@@ -31,13 +31,13 @@ Receiving: 500~ 700 bytes
 Amplification is about 7 ~ 10 times
 
 ## Usage
-### Build virtual environment
-`virtualenv .`
-### Install necessary packages
-`pip3 install -r requirement`
-### Lauch attack
-sudo python DAA.py -D _destination_IP_ -T _target_IP_
-### Sniffing
+### Clone repository
+git clone https://github.com/Ezecheel/Dns-Amplification-Attack
+### Reconnaissance to check amplification
+sudo python DAA_recon.py -D _destination_IP_ -q _queryname_ -qt _number of query type_
+### Launch attack
+sudo python DAA.py -D _destination_IP_ -T _target_IP_ -q _queryname_ -qt _number of query type_ -n _number of packets to send_
+### Listen to DNS traffic
 sudo python snifffer.py
 ### Snapshot
 #### Send packet
