@@ -55,7 +55,7 @@ if __name__ == '__main__':
     p = (ip/udp/dns) # create test packet
     p = [p]*args.n
     print('Size of initial packet: %s' %sum(map(len, p)))
-    pr,_ = sr(p, timeout=0.5)
+    pr,_ = sr(p, timeout=1)
     r = [t[1] for t in pr]
     print('Size of returned packet: %s' %sum(map(len, r)))
     # map(lambda x: x.display(), r) ## used for debugging purposes
