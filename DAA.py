@@ -1,4 +1,4 @@
-from scapy import *
+from scapy.all import *
 
 from argparse import ArgumentParser
 import sys
@@ -17,45 +17,45 @@ def construct_UDP():
     udp.display()
     return udp
 
-def construct_DNS():
+def construct_DNS(q):
     # Construct DNS packet
     dns = DNS()
     dns.rd = 1
     dns.qdcount = 1
+    # Set DNS Question Record in DNS packet
+    dns.qd = q
     dns.display()
     return dns
 
-def construct_DNSQR(qtype=255, qname = 'google.com'):
+def construct_DNSQR(qtype, qname):
     # Construct DNS Question Record
     q = DNSQR()
     q.qtype = qtype
     q.qname = qname
-    q.display()
+    # q.display() ## already displayed as part of construct_DNS(q)
     return q
-
-def Set_UP(ip, udp, dns, q, target = '127.0.0.1'):
-    # Set DNS Question Record in DNS packet
-    dns.qd = q
+    
+def Set_UP(ip, udp, dns, q, target):
 
     # Concencate
-    r = (ip/udp/dns)
-    r.display()
-    # SYN scan
-    sr1(r)
+    # r = (ip/udp/dns) ## unnecessary double
+    # r.display() ## unnecessary double
 
     # Set up r
     r = (ip/udp/dns)
+    # SYN scan
+    sr1(r)
     r.src = target
-    r.display()
+    r.display() # complete packet shown twice times (once per layer & once complete packet)
     return r
 
 if __name__ == '__main__':
     parser = ArgumentParser()
-    parser.add_argument("-D", "--DNS-server", help="Assign specific DNS server", dest="D")
-    parser.add_argument("-T", "--Target", help="target server", dest="T")
-    parser.add_argument("-q", "--query", help="domainname to query", dest="q")
-    parser.add_argument("-qt", "--querytype", help="type of record to query", dest="qt")
-    parser.add_argument("-n", "--number", help="number of packets to send", dest="n", default = 1)
+    parser.add_argument("-D", "--DNS-server", help="Assign specific DNS server", dest="D", default = '8.8.8.8')
+    parser.add_argument("-T", "--Target", help="target server", dest="T", default = '172.0.0.1')
+    parser.add_argument("-q", "--query", help="domainname to query", dest="q", default = 'google.com')
+    parser.add_argument("-qt", "--querytype", help="type of record to query", dest="qt", type=int, default = 255)
+    parser.add_argument("-n", "--number", help="number of packets to send", dest="n", type=int, default = 1)
     args = parser.parse_args()
     print('DNS server: %s' %args.D)
     print('Target: %s' %args.T)
@@ -65,8 +65,8 @@ if __name__ == '__main__':
 
     ip = construct_IP(DNSaddr = args.D)
     udp = construct_UDP()
-    dns = construct_DNS()
     q = construct_DNSQR(qtype = args.qt, qname = args.q)
+    dns = construct_DNS(q)
 
     r = Set_UP(ip, udp, dns, q, args.T)
     r = [r]*args.n
