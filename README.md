@@ -70,7 +70,7 @@ sudo python snifffer.py
 ```
 This returns all DNS packets that are received on the interface, similar to a Wireshark capture filtered on DNS.
 This can serve as an introduction to see which records are being requested and received, including which replies seem sufficiently large to be used as example.
-### Snapshot //add snapshots
+### Snapshot
 #### Sniffing
 ```shell
 #####[ Ethernet ]#####
