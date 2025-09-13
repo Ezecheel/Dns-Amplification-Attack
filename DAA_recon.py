@@ -55,10 +55,10 @@ if __name__ == '__main__':
     p = (ip/udp/dns) # create test packet
     p = [p]*args.n
     print('Size of initial packet: %s' %sum(map(len, p)))
-    pr = sr(p, timeout=0.5)
+    pr,_ = sr(p, timeout=0.5)
     r = [t[1] for t in pr]
     print('Size of returned packet: %s' %sum(map(len, r)))
-    r.display()
-    amp = sum(map(len, r))/sum(map(len, p))
+    # map(lambda x: x.display(), r) ## used for debugging purposes
+    amp = float(sum(map(len, r)))/float(sum(map(len, p)))
     print('Amplification: %f' %amp)
     exit()

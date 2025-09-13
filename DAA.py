@@ -39,7 +39,7 @@ def Set_UP(ip, udp, dns, target):
     # Set up p
     p = (ip/udp/dns)
     p.src = target
-    p.display() # complete packet shown twice times (once per layer & once complete packet)
+    p.display() # complete packet shown twice (once per layer & once complete packet)
     return p
 
 if __name__ == '__main__':
