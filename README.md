@@ -1,9 +1,9 @@
 DNS Amplification attack
 ===
-contribute by < `ztex` >
+Customization of the repository of tony2037
 [github-Dns-Amplification-Attack](https://github.com/tony2037/Dns-Amplification-Attack)
 
-[hackmd](https://hackmd.io/s/rkOF6EJu4)
+Some adaptations have been made for easier deployment and more flexible use in an educational setting.
 
 # How does it work ?
 According to [DNS Amplification Attack](https://www.cloudflare.com/learning/ddos/dns-amplification-ddos-attack/) :
@@ -36,9 +36,9 @@ Amplification is about 7 ~ 10 times
 ### Install necessary packages
 `pip3 install -r requirement`
 ### Lauch attack
-`make DAA`
+sudo python DAA.py -D _destination_IP_ -T _target_IP_
 ### Sniffing
-`make sniffer`
+sudo python snifffer.py
 ### Snapshot
 #### Send packet
 ```shell
