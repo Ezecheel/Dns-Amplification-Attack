@@ -17,29 +17,74 @@ According to [DNS Amplification Attack](https://www.cloudflare.com/learning/ddos
 
 # Experience
 ## Explanation
-This package is a standalone toolkit based on **python scapy** which send a **UDP/IP** packet carry a **DNS** packet with **DNS Resource Record** packet. The scapy library is included in the repository to ensure compatibility with virtually any host that can run Python.
-The `destination` is `8.8.8.8`, which is well-known **google DNS server**.
-In the experience phase, the `source address` is local, but can be easily change to `victim address` in attack phase.
-- [ ] DAA.py
-Used for lauching attack
-- [ ] sniffer.py
-Used for sniffing packet to varify
-
-## Result
-Sending: 70 bytes
-Receiving: 500~ 700 bytes
-Amplification is about 7 ~ 10 times
+This package is a standalone toolkit based on **python scapy** which send a **UDP/IP** packet carry a **DNS** packet with **DNS Resource Record** packet. The scapy library is included in the repository to ensure compatibility with virtually any host that can run Python. This also reduces the number of steps needed to get started.
+The default `destination` is `8.8.8.8`, which is well-known **google DNS server**.
+The default `target address` is local, but can be easily changed to any target in the arguments
 
 ## Usage
 ### Clone repository
+```shell
 git clone https://github.com/Ezecheel/Dns-Amplification-Attack
+```
 ### Reconnaissance to check amplification
-sudo python DAA_recon.py -D _destination_IP_ -q _queryname_ -qt _number of query type_
+```shell
+sudo python DAA_recon.py -D _destination_IP_ -q _queryname_ -qt _id of query type_
+```
+**destination_IP** is the IP address of the DNS server to which the request will be sent, default is 8.8.8.8
+**queryname** is the domainname for which the record will be requested, default is google.com
+**id of query type** is the id number of the record type that will be requested, default is 255 (ALL)
+
+TYPE            value and meaning
+
+A               1 a host address
+
+NS              2 an authoritative name server
+
+MD              3 a mail destination (Obsolete - use MX)
+
+MF              4 a mail forwarder (Obsolete - use MX)
+
+CNAME           5 the canonical name for an alias
+
+SOA             6 marks the start of a zone of authority
+
+MB              7 a mailbox domain name (EXPERIMENTAL)
+
+MG              8 a mail group member (EXPERIMENTAL)
+
+MR              9 a mail rename domain name (EXPERIMENTAL)
+
+NULL            10 a null RR (EXPERIMENTAL)
+
+WKS             11 a well known service description
+
+PTR             12 a domain name pointer
+
+HINFO           13 host information
+
+MINFO           14 mailbox or mail list information
+
+MX              15 mail exchange
+
+TXT             16 text strings
+
+for a more complete list see: https://www.iana.org/assignments/dns-parameters/dns-parameters.xhtml
+
 ### Launch attack
-sudo python DAA.py -D _destination_IP_ -T _target_IP_ -q _queryname_ -qt _number of query type_ -n _number of packets to send_
+```shell
+sudo python DAA.py -D _destination_IP_ -T _target_IP_ -q _queryname_ -qt _id of query type_ -n _number of packets_
+```
+for **destination_IP**, **queryname** and **id of query type** see above.
+**target_IP** is the IP address of the target machine to which the DNS replies should be sent, default is 127.0.0.1
+**number of packets** is the number of DNS queries that should be sent as part of simulated attack, default is 1
+
 ### Listen to DNS traffic
+```shell
 sudo python snifffer.py
-### Snapshot
+```
+This returns all DNS packets that are received on the interface, similar to a Wireshark capture filtered on DNS.
+This can serve as an introduction to see which records are being requested and received, including which replies seem sufficiently large to be used as example.
+### Snapshot //add snapshots
 #### Send packet
 ```shell
          |###[ DNS Question Record ]### 

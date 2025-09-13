@@ -52,9 +52,9 @@ if __name__ == '__main__':
 
     p = (ip/udp/dns) # create test packet
     print('Size of initial packet: %s' %len(p))
-    r = sr1(p)
+    r = sr(p, timeout=0.5)
     print('Size of returned packet: %s' %len(r))
     r.display()
     amp = len(r)/len(p)
-    print('Amplification: %s' %amp)
+    print('Amplification: %f' %amp)
     exit()

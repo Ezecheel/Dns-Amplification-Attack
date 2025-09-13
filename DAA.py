@@ -38,8 +38,6 @@ def construct_DNSQR(qtype, qname):
 def Set_UP(ip, udp, dns, target):
     # Set up p
     p = (ip/udp/dns)
-    # SYN scan
-    sr1(p)
     p.src = target
     p.display() # complete packet shown twice times (once per layer & once complete packet)
     return p
