@@ -40,10 +40,12 @@ if __name__ == '__main__':
     parser.add_argument("-D", "--DNS-server", help="Assign specific DNS server", dest="D", default = '8.8.8.8')
     parser.add_argument("-q", "--query", help="domainname to query", dest="q", default = 'google.com')
     parser.add_argument("-qt", "--querytype", help="type of record to query", dest="qt", type=int, default = 255)
+    parser.add_argument("-n", "--number", help="number of packets to send", dest="n", type=int, default = 1)
     args = parser.parse_args()
     print('DNS server: %s' %args.D)
     print('Query: %s' %args.q)
     print('Query Type: %s' %args.qt)
+    print('Number of packets: %s' %args.n)
 
     ip = construct_IP(DNSaddr = args.D)
     udp = construct_UDP()
@@ -51,10 +53,11 @@ if __name__ == '__main__':
     dns = construct_DNS(q)
 
     p = (ip/udp/dns) # create test packet
-    print('Size of initial packet: %s' %len(p))
+    p = [p]*args.n
+    print('Size of initial packet: %s' %sum(map(len, p)))
     r = sr(p, timeout=0.5)
-    print('Size of returned packet: %s' %len(r))
+    print('Size of returned packet: %s' %sum(map(len, r)))
     r.display()
-    amp = len(r)/len(p)
+    amp = sum(map(len, r))/sum(map(len, p))
     print('Amplification: %f' %amp)
     exit()
